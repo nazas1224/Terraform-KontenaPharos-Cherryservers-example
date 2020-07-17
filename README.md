@@ -20,6 +20,26 @@ Note: Works with CentOS 7 64bit, Ubuntu 18_04 64bit and Debain 9 64bit images.
 
 Update variables in main.tf file
 
+Note: If you are using Ubuntu 18_04 64bit please uncomment the following lines in main.tf file for both master and worker configurations:
+```
+ connection {
+      type        = "ssh"
+      user        = "root"
+      host        = self.primary_ip
+      private_key = file("~/.ssh/Your_ssh.key")
+    }
+    provisioner "remote-exec" {
+    inline = [
+      "export DEBCONF_NONINTERACTIVE_SEEN=true",
+      "export DEBIAN_FRONTEND=noninteractive",
+      "export UCF_FORCE_CONFOLD=1",
+      "apt update",
+      "apt -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" upgrade -y",
+      "sudo apt-get -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" -y install curl",
+    ]
+  }
+```
+
 ```
 $ ./terraform apply
 ```

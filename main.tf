@@ -75,7 +75,7 @@ resource "cherryservers_server" "pharos_master" {
       type        = "ssh"
       user        = "root"
       host        = self.primary_ip
-      private_key = file("/home/giedriusn/.ssh/kontena_ssh")
+      private_key = file("~/.ssh/Your_ssh.key")
     }
     provisioner "remote-exec" {
     inline = [
@@ -107,7 +107,7 @@ resource "cherryservers_server" "pharos_worker" {
       type        = "ssh"
       user        = "root"
       host        = self.primary_ip
-      private_key = file("/home/giedriusn/.ssh/kontena_ssh")
+      private_key = file("~/.ssh/Your_ssh.key")
     }
     provisioner "remote-exec" {
     inline = [

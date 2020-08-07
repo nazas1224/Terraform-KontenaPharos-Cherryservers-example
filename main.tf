@@ -64,36 +64,23 @@ resource "cherryservers_server" "pharos_master" {
   hostname        = "${var.cluster_name}-master-${count.index}"
   plan_id         = var.master_plan
   region          = var.region
+ #Uncomment if you are installing Ubuntu 18.04 64bit
+ #user_data       = "I2Nsb3VkLWNvbmZpZwpwYWNrYWdlczoKIC0gY3VybAo="
   image           = var.host_os
   project_id      = cherryservers_project.Kontena_Pharos.id
   ssh_keys_ids    = [cherryservers_ssh.kontena_ssh.id]
   tags            = {
         Name = "master"
     }
-/* Uncomment if you are installing Ubuntu 18.04 64bit
-    connection {
-      type        = "ssh"
-      user        = "root"
-      host        = self.primary_ip
-      private_key = file("~/.ssh/Your_ssh.key")
-    }
-    provisioner "remote-exec" {
-    inline = [
-      "export DEBCONF_NONINTERACTIVE_SEEN=true",
-      "export DEBIAN_FRONTEND=noninteractive",
-      "export UCF_FORCE_CONFOLD=1",
-      "apt update",
-      "apt -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" upgrade -y",
-      "sudo apt-get -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" -y install curl",
-    ]
-  }
-  */
+
 }
 resource "cherryservers_server" "pharos_worker" {
   count        = var.worker_count
   hostname     = "${var.cluster_name}-worker-${count.index}"
   plan_id      = var.worker_plan
   region       = var.region
+ #Uncomment if you are installing Ubuntu 18.04 64bit
+ #user_data    = "I2Nsb3VkLWNvbmZpZwpwYWNrYWdlczoKIC0gY3VybAo="
   image        = var.host_os
   project_id   = cherryservers_project.Kontena_Pharos.id
   ssh_keys_ids = [cherryservers_ssh.kontena_ssh.id]
@@ -102,47 +89,7 @@ resource "cherryservers_server" "pharos_worker" {
    }
 #  ip_addresses_ids = ["${cherryservers_ip.floating-ip-kontena-worker.*.id[count.index]}"] <<-- This line will add 1 flaoting IP per worker node
 
-/* Uncomment if you are installing Ubuntu 18.04 64bit
-    connection {
-      type        = "ssh"
-      user        = "root"
-      host        = self.primary_ip
-      private_key = file("~/.ssh/Your_ssh.key")
-    }
-    provisioner "remote-exec" {
-    inline = [
-     "export DEBCONF_NONINTERACTIVE_SEEN=true",
-      "export DEBIAN_FRONTEND=noninteractive",
-      "export UCF_FORCE_CONFOLD=1",
-      "apt update",
-      "apt -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" upgrade -y",
-      "sudo apt-get -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" -y install curl",
-    ]
-
-  }
-  */
 }
-
-/**output "pharos_hosts" {
-  value = {
-    masters = {
-      address         = "${cherryservers_server.pharos_master.*.primary_ip}"
-      private_address = "${cherryservers_server.pharos_master.*.private_ip}"
-      role            = "master"
-      user            = "root"
-    }
-    workers = {
-      address         = "${cherryservers_server.pharos_worker.*.primary_ip}"
-      private_address = "${cherryservers_server.pharos_worker.*.private_ip}"
-      role            = "worker"
-      user            = "root"
-      label = {
-        ingress = "nginx"
-
-      }
-    }
-  }
-}**/
 
 output "pharos_cluster" {
   value = {
